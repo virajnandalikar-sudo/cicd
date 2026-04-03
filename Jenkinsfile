@@ -12,32 +12,27 @@ pipeline {
             steps {
                 script {
                     // Build using the Dockerfile inside myapp directory
-                    docker.build("mydockerhubusername/myapp:latest", "myapp")
+                    docker.build("virajvn/myapp:latest", "myapp")
                 }
             }
         }
-
         stage('Push to Docker Hub') {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
-                        docker.image("mydockerhubusername/myapp:latest").push()
+                        docker.image("virajvn/myapp:latest").push()
                     }
                 }
             }
         }
-stage('Deploy') {
-    steps {
+        stage('Deploy') {
+ steps {
         script {
             // Stop old container if running
             sh 'docker rm -f myapp-container || true'
 
             // Run new container
-            sh 'docker run -d --name myapp-container mydockerhubusername/myapp:latest'
+            sh 'docker run -d --name myapp-container virajvn/myapp:latest'
         }
-    }
-}
-
-    }
-}
-
+   }}
+}}
