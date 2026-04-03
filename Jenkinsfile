@@ -28,6 +28,18 @@ pipeline {
                 }
             }
         }
+
+ stage('Cleanup Old Images') {
+            steps {
+                script {
+                    // List all images for this repo, sort by creation date, skip the newest 3, delete the rest
+                    sh '''
+                    docker images virajvn/myapp --format "{{.ID}}" | tail -n +4 | xargs -r docker rmi
+                    '''
+                }
+            }
+        }
+
         stage('Deploy') {
  steps {
         script {
