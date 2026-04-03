@@ -38,4 +38,12 @@ pipeline {
             sh 'docker run -d -p 5000:5000 --name myapp-container virajvn/myapp:latest'
         }
    }}
+stage('Show Logs') {
+            steps {
+                script {
+                    // Print logs from the running container
+                    sh 'docker logs myapp-container'
+                }
+            }
+        }
 }}
