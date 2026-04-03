@@ -1,19 +1,43 @@
 pipeline {
     agent any
+
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/virajnandalikar-sudo/cicd.git'
+                git 'https://github.com/virajnandalikar-sudo/cicd.git'
             }
         }
-        stage('Run Python Script') {
+
+        stage('Build Docker Image') {
             steps {
-                sh 'python3 hello.py'
+                script {
+                    // Build using the Dockerfile inside myapp directory
+                    docker.build("mydockerhubusername/myapp:latest", "myapp")
+                }
             }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
+                        docker.image("mydockerhubusername/myapp:latest").push()
+                    }
+                }
+            }
+        }
+stage('Deploy') {
+    steps {
+        script {
+            // Stop old container if running
+            sh 'docker rm -f myapp-container || true'
+
+            // Run new container
+            sh 'docker run -d --name myapp-container mydockerhubusername/myapp:latest'
         }
     }
-    triggers {
-        githubPush()
+}
+
     }
 }
 
