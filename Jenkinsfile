@@ -11,6 +11,18 @@ pipeline {
                 sh 'python3 hello.py'
             }
         }
+        stage('Deploy') {
+    steps {
+        script {
+            // Stop old container if running
+            sh 'docker rm -f myapp-container || true'
+
+            // Run new container
+            sh 'docker run -d --name myapp-container mydockerhubusername/myapp:latest'
+        }
+    }
+}
+
     }
     triggers {
         githubPush()
