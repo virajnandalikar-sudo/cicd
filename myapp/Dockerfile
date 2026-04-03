@@ -6,6 +6,6 @@ WORKDIR /usr/src/app
 
 # Copy source code
 COPY app.py .
-
+RUN pip install flask
 # Run the script
 CMD ["python", "app.py"]

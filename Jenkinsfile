@@ -35,7 +35,7 @@ pipeline {
             sh 'docker rm -f myapp-container || true'
 
             // Run new container
-            sh 'docker run -d --name myapp-container virajvn/myapp:latest'
+            sh 'docker run -d -p 5000:5000 --name myapp-container virajvn/myapp:latest'
         }
    }}
 }}
